@@ -36,7 +36,7 @@ client.on('interactionCreate', (interaction) => {
             let randomNum = Math.floor(Math.random()*max)
             interaction.reply(quoteList[randomNum]);
         }
-        randomNumGen(8)   
+        randomNumGen(8)
     }
 })
 
