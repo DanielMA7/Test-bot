@@ -1,18 +1,18 @@
-const { Client, IntentsBitField, Message, InteractionCollector } = require('discord.js');
+const { Client, IntentsBitField, Message, InteractionCollector, DMChannel, Partials, EmbedBuilder } = require('discord.js');
 require('dotenv').config()
 
 
-const client = new Client({
+const client = new Client({ 
     intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMembers,
         IntentsBitField.Flags.GuildMessages,
         IntentsBitField.Flags.MessageContent,
+        IntentsBitField.Flags.DirectMessages,
+    ],
+    partials: [
+        Partials.Channel
     ]
-});
-
-client.on('ready', (c) => {
-    console.log(`${c.user.tag} is online!`);
 });
 
 const quoteList = [
@@ -53,16 +53,32 @@ client.on('interactionCreate', async interaction => {
 client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "send"){
-        if (interaction.user.id != "771907578770227213" || "792149452944179220" || "483227097267961867"){
+        if (interaction.user.id != "771907578770227213" || "792149452944179220" || "483227097267961867" || "327014123529568257"){
             const targetUser = interaction.options.getUser('user');
             const targetContentMessage = interaction.options.getString('content');
-            await interaction.reply({ content: 'Confirmed your message!', ephemeral: true });
+            interaction.reply({ content: 'Confirmed your message!', ephemeral: true });
     
-            client.users.send(targetUser.id, targetContentMessage)
+           await client.users.send(targetUser.id, targetContentMessage)
         }else{
-            await interaction.reply({ content: 'You dont have access to that command.', ephemeral: true})
+            interaction.reply({ content: 'You dont have access to that command.', ephemeral: true})
         }
     }
+})
+
+client.on('messageCreate', async message => {
+    if (message.channel.type === 1) {
+        if (message.author.bot) return;
+        if (message.author.id == process.env.ME){
+            client.users.send(process.env.ALT_ACCOUNT, {content: message.content})
+        }else if (message.author.id == process.env.ALT_ACCOUNT){
+            client.users.send(process.env.ME, {content: `${message.author.tag} said: ${message.content}`})
+        }
+    }
+ }); 
+
+ 
+client.on("ready", (c)  => {
+    console.log(`${c.user.tag} logged in`)
 })
 
 client.login(process.env.TOKEN);

@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { REST, Routes, ApplicationCommandOptionType } = require('discord.js');
+const { REST, Routes, ApplicationCommandOptionType, EmbedBuilder } = require('discord.js');
 
 const commands = [
   {
@@ -33,8 +33,20 @@ const commands = [
         description: "The message you would like to send.",
         type: ApplicationCommandOptionType.String,
         required: true,
-      }
+      },
     ]
+  },
+  {
+    name: "cme",
+    description: "Sends private message to a user",
+    options: [
+    {
+      name: "embed",
+      description: "Do you want your message embedded or not?",
+      type: ApplicationCommandOptionType.Boolean,
+      required: true,
+    }
+  ]
   }
 ];
 
